@@ -14,16 +14,16 @@
 
 ulimit -u 8192
 INPUTDIR=$1 #get working directory for files
-
+echo ${INPUTDIR}
 mkdir -p ${INPUTDIR}/03_Aligned ${INPUTDIR}/out_error/03_Aligned 
 
-FILES=($(ls ${INPUTDIR}/02_Trimmed/*R1.fastq.gz))
+FILES=($(ls ${INPUTDIR}/02_Trimmed/*_R1.fastq.gz))
 module load HISAT2
 module list
 
 FILENAME=${FILES[$SLURM_ARRAY_TASK_ID]} #this gets file name from outside array
 echo ${FILENAME}
-FILE_PROCESS=$(basename ${FILENAME} "_R1.fastq.gz") #remove _R1.fq.gz ending
+FILE_PROCESS=$(basename ${FILENAME} "_R1.fastq.gz") #remove _R1.fastq.gz ending
 
 echo "Current working directory: `pwd`"
 
@@ -32,12 +32,12 @@ echo ""
 echo $FILE_PROCESS
 
 
-hisat2 -p 1 -x /bulk/jpoland/genome/intermedium/C4-5353T1/index/v3/Thinopyrum_intermedium.mainGenome -1 ${INPUTDIR}/02_Trimmed/${FILE_PROCESS}_R1.fastq.gz -2 ${INPUTDIR}/02_Trimmed/${FILE_PROCESS}_R2.fastq.gz -S ${INPUTDIR}/03_Aligned/${FILE_PROCESS}.sam --no-spliced-alignment --no-unal &> ${INPUTDIR}/out_error/03_Trimmed/${FILE_PROCESS}.log
+hisat2 -p 1 -x /bulk/jpoland/genome/intermedium/C4-5353T1/index/v3/Thinopyrum_intermedium.mainGenome -1 ${INPUTDIR}/02_Trimmed/${FILE_PROCESS}_R1.fastq.gz -2 ${INPUTDIR}/02_Trimmed/${FILE_PROCESS}_R2.fastq.gz -S ${INPUTDIR}/03_Aligned/${FILE_PROCESS}.sam --no-spliced-alignment --no-unal &> ${INPUTDIR}/out_error/03_Aligned/${FILE_PROCESS}.log
 
 
 #########To RUN###########
 #get an array list of all R1 reads in bash before sbatch as 
-#% ls $DIR/02_Trimmed/$R1* | wc -l  #output total number of files
+#% ls ${INPUTDIR}/02_Trimmed/*R1* | wc -l  #output total number of files
 
 #sbatch --array=0-(output number -1) HiSat2_Alignment.sh
 
