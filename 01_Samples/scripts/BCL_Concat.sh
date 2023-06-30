@@ -18,13 +18,14 @@ outputdir=$3
 
 mkdir -p $outputdir/01_Samples
 
-echo "Doing JOB  on |" $(date) " | $inputfile | $inputdir | $outputdir "
+echo "Doing JOB  on |" $(date) " | $inputfile | $inputdir "
 echo "" 
 
 cat $inputfile | while read LINE; do
     
-   cat $inputdir/00_Demultiplex/$LINE*R1_001.fastq.gz > $outputdir/01_Samples/$LINE_R1.fastq.gz
-   cat $inputdir/00_Demultiplex/$LINE*R2_001.fastq.gz > $outputdir/01_Samples/$LINE_R2.fastq.gz
+    echo "Working on $LINE"
+   cat $inputdir/00_Demultiplex/$LINE*R1_001.fastq.gz > $inputdir/01_Samples/$LINE_R1.fastq.gz
+   cat $inputdir/00_Demultiplex/$LINE*R2_001.fastq.gz > $inputdir/01_Samples/$LINE_R2.fastq.gz
 
 
 done
