@@ -27,7 +27,7 @@ cat $inputfile | while read LINE; do
     echo "Working on $LINE"
     cat_files_R1=$(find . -type f -name "${LINE}*R1_001.fastq.gz")
     echo "$cat_files_R1"
-    echo "$cat_files" | xargs cat > ${inputdir}/01_Samples/${LINE}_R1.fastq.gz
+    echo "$cat_files_R1" | xargs cat > ${inputdir}/01_Samples/${LINE}_R1.fastq.gz
    #cat ${cat_files_R1} > ${inputdir}/01_Samples/${LINE}_R1.fastq.gz
    #cat_files_R2=$(find . -type f -name "${LINE}*R2_001.fastq.gz")
   # echo "$cat_files_R2"
