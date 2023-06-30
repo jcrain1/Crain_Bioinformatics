@@ -13,8 +13,9 @@
 
 
 ulimit -u 8192
-mkdir -p ${INPUTDIR}/03_Aligned ${INPUTDIR}/out_error/03_Aligned 
 INPUTDIR=$1 #get working directory for files
+
+mkdir -p ${INPUTDIR}/03_Aligned ${INPUTDIR}/out_error/03_Aligned 
 
 FILES=($(ls ${INPUTDIR}/02_Trimmed/*R1.fastq.gz))
 module load HISAT2
