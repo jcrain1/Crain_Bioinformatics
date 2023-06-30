@@ -24,8 +24,8 @@ echo ""
 cat $inputfile | while read LINE; do
     
     echo "Working on $LINE"
-   cat $inputdir/00_Demultiplex/$LINE*R1_001.fastq.gz > $inputdir/01_Samples/$LINE_R1.fastq.gz
-   cat $inputdir/00_Demultiplex/$LINE*R2_001.fastq.gz > $inputdir/01_Samples/$LINE_R2.fastq.gz
+   cat "$inputdir/00_Demultiplex/$LINE*R1_001.fastq.gz" > $inputdir/01_Samples/$LINE_R1.fastq.gz
+   cat "$inputdir/00_Demultiplex/$LINE*R2_001.fastq.gz" > $inputdir/01_Samples/$LINE_R2.fastq.gz
 
 
 done
