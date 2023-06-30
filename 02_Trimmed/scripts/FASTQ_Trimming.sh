@@ -32,7 +32,7 @@ echo ""
 echo $FILE_PROCESS
 
 
-/homes/jcrain/Software/fastp/fastp -i ${INPUTDIR}/01_Samples/${FILE_PROCESS}_R1.fastq.gz -I ${INPUTDIR}/01_Samples/${FILE_PROCESS}_R2.fastq.gz -o ${INPUTDIR}/02_Trimmed/${FILE_PROCESS}_R1.fastq.gz -O ${INPUTDIR}/02_Trimmed/${FILE_PROCESS}_R2.fastq.gz --thread=1 --html=${INPUTDIR}/out_error/02_Trimmed/${FILE_PROCESS}_file.html --json=${INPUTDIR}/out_error/02_Trimmed/${FILE_PROCESS}_file.json --detect_adapter_for_pe --qualified_quality_phred=20 --length_required=150
+/homes/jcrain/Software/fastp/fastp -i ${INPUTDIR}/01_Samples/${FILE_PROCESS}_R1.fastq.gz -I ${INPUTDIR}/01_Samples/${FILE_PROCESS}_R2.fastq.gz -o ${INPUTDIR}/02_Trimmed/${FILE_PROCESS}_R1.fastq.gz -O ${INPUTDIR}/02_Trimmed/${FILE_PROCESS}_R2.fastq.gz --thread=1 --html=${INPUTDIR}/out_error/02_Trimmed/${FILE_PROCESS}_file.html --json=${INPUTDIR}/out_error/02_Trimmed/${FILE_PROCESS}_file.json --detect_adapter_for_pe --qualified_quality_phred=20 --length_required=100
 
 
 echo "Finished JOB on `date`";
