@@ -21,13 +21,13 @@ Directory structure was set up for each skimsequencing run. Structure is:
       ├── Summary Statistics
    ├── 01_Samples
       ├── Concatenated samples into single samples.
-   ├── 02_trimmed
+   ├── 02_Trimmed
       ├── 
-   ├── 03_aligned
+   ├── 03_Aligned
       ├── 
-   ├── 04_filtered
+   ├── 04_Filtered
       ├── 
-   ├── 05_indexed
+   ├── 05_Indexed
       ├── 
    ├── Scripts
       ├── Shell scripts that step through process
