@@ -17,6 +17,7 @@ inputdir=$2
 outputdir=$3
 
 mkdir -p $outputdir/01_Samples
+cd $inputdir/00_Demultiplex
 
 echo "Doing JOB  on |" $(date) " | $inputfile | $inputdir "
 echo "" 
@@ -24,8 +25,10 @@ echo ""
 cat $inputfile | while read LINE; do
     
     echo "Working on $LINE"
-   cat "$inputdir/00_Demultiplex/$LINE*R1_001.fastq.gz" > $inputdir/01_Samples/$LINE_R1.fastq.gz
-   cat "$inputdir/00_Demultiplex/$LINE*R2_001.fastq.gz" > $inputdir/01_Samples/$LINE_R2.fastq.gz
+    cat_files_R1=$(find . -type f -name "$LINE*R1_001.fastq.gz")
+   cat $cat_files_R1 > $inputdir/01_Samples/$LINE_R1.fastq.gz
+   cat_files_R2=$(find . -type f -name "$LINE*R2_001.fastq.gz")
+   cat $cat_files_R2 > $inputdir/01_Samples/$LINE_R2.fastq.gz
 
 
 done
