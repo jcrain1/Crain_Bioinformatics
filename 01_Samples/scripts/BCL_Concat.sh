@@ -34,7 +34,7 @@ cat $inputfile | while read LINE; do
    
    cat_files_R2=$(find . -type f -name "${LINE}*R2_001.fastq.gz" | sort)
  echo "$cat_files_R2"
- r2_base=$(basename -a -s "_R2_001.fastq.gz" $cat_files_R1)
+ r2_base=$(basename -a -s "_R2_001.fastq.gz" $cat_files_R2)
     echo "$cat_files_R2" | xargs cat > ${inputdir}/01_Samples/${LINE}_R2.fastq.gz
 
 if [ "$r1_base" = "$r2_base" ]; then
