@@ -52,7 +52,7 @@ samtools view -h -f 0x2 ${INPUTDIR}/03_Aligned/${FILE_PROCESS}.sam | awk 'substr
 
 ######### index bam file for SNP calling ####################
 samtools sort ${INPUTDIR}/04_Filtered/${FILE_PROCESS}_filtered.bam -o ${INPUTDIR}/05_Indexed/${FILE_PROCESS}_sorted.bam -O BAM
-samtools index -c ${INPUTDIR}/05_indexed/${FILE_PROCESS}_sorted.bam
+samtools index -c ${INPUTDIR}/05_Indexed/${FILE_PROCESS}_sorted.bam
 
 
 echo "Finished JOB on `date`";

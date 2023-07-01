@@ -37,7 +37,7 @@ echo $FILE_PROCESS
 
 ## index bam file
 samtools sort ${INPUTDIR}/04_Filtered/${FILE_PROCESS}_filtered.bam -o ${INPUTDIR}/05_Indexed/${FILE_PROCESS}_sorted.bam -O BAM
-samtools index -c ${INPUTDIR}/05_indexed/${FILE_PROCESS}_sorted.bam
+samtools index -c ${INPUTDIR}/05_Indexed/${FILE_PROCESS}_sorted.bam
 
 
 echo "Finished JOB on `date`";
