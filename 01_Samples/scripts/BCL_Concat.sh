@@ -25,14 +25,24 @@ echo ""
 cat $inputfile | while read LINE; do
     
     echo "Working on $LINE"
-    cat_files_R1=$(find . -type f -name "${LINE}*R1_001.fastq.gz")
+    cat_files_R1=$(find . -type f -name "${LINE}*R1_001.fastq.gz" | sort)
     echo "$cat_files_R1"
+    r1_base=$(basename -a -s "_R1_001.fastq.gz" $cat_files_R1)
+    
     echo "$cat_files_R1" | xargs cat > ${inputdir}/01_Samples/${LINE}_R1.fastq.gz
    
    
-   cat_files_R2=$(find . -type f -name "${LINE}*R2_001.fastq.gz")
+   cat_files_R2=$(find . -type f -name "${LINE}*R2_001.fastq.gz" | sort)
  echo "$cat_files_R2"
+ r2_base=$(basename -a -s "_R2_001.fastq.gz" $cat_files_R1)
     echo "$cat_files_R2" | xargs cat > ${inputdir}/01_Samples/${LINE}_R2.fastq.gz
+
+if [ "$r1_base" = "$r2_base" ]; then
+    echo "Strings are equal."
+else
+    echo "Strings are not equal."
+fi
+
 
 
 done
