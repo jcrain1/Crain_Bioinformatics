@@ -52,7 +52,7 @@ echo "Finished JOB on `date`";
 
 
 #########To RUN###########
-sbatch --array=1-21 BCF_SNP_Calls.sh INPUTDIR 
+#######%sbatch --array=1-21 BCF_SNP_Calls.sh INPUTDIR region_file
 
 
 

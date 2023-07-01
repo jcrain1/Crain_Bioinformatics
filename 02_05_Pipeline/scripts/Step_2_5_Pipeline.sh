@@ -64,6 +64,6 @@ echo "Finished JOB on `date`";
 #get an array list of all R1 reads in bash before sbatch as 
 #% ls $INPUTDIR/01_samples/$R1* | wc -l  #output total number of files
 
-#sbatch --array=0-(output-1) Step_2_5_Pipeline.sh
+#sbatch --array=0-(output-1) Step_2_5_Pipeline.sh INPUTDIR
 
 
