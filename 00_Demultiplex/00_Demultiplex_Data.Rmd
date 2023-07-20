@@ -22,6 +22,41 @@ options(digits = 10) #set options to include lots of digits
 #source('./scripts/Function_R.r') #load functions
 ```
 
+# CIMMYT AWG 2023
+GBS files delivered as bcl. Need to demultiplex to original R1 fastq read.
+
+```{cimmyt}
+key <- read.delim(file = './data/Original_Data/NEXUT0001.txt')
+
+#check the number of unique reads
+length(unique(key$sample_name))
+
+#For Each lane 2 
+key$Lane <- 2
+key <- key[, c('Lane', 'sample_name', 'i7_barcode', 'i5_barcode')] #get information for bcl2fastq processing
+
+colnames(key) <- c('Lane', 'Sample_ID', 'index', 'index2')
+
+#write out version 2 sample file. Update number of index reads and reads as necessary. 
+system('echo "[Header]\nFileFormatVersion,2\n\n[Reads]\nRead1Cycles,151\nRead2Cycles,151\nIndex1Cycles,10\nIndex2Cycles,10\n\n[BCLConvert_Settings]\nCreateFastqForIndexReads,0\nOverrideCycles,Y151;I8N2;N2I8;Y151\n[BCLConvert_Data]" > ./data/Intermediate_File/NEXUT0001_L002_i7i5.csv')
+
+write.table(key, file = './data/Intermediate_File/NEXUT0001_L002_i7i5.csv', row.names = FALSE, quote = FALSE, append = TRUE, sep = ',') #get a warning message that is okay
+
+
+#For Each lane 8
+key$Lane <- 8
+
+#write out version 2 sample file. Update number of index reads and reads as necessary. 
+system('echo "[Header]\nFileFormatVersion,2\n\n[Reads]\nRead1Cycles,151\nRead2Cycles,151\nIndex1Cycles,10\nIndex2Cycles,10\n\n[BCLConvert_Settings]\nCreateFastqForIndexReads,0\nOverrideCycles,Y151;I8N2;N2I8;Y151\n[BCLConvert_Data]" > ./data/Intermediate_File/NEXUT0001_L008_i7i5.csv')
+
+write.table(key, file = './data/Intermediate_File/NEXUT0001_L008_i7i5.csv', row.names = FALSE, quote = FALSE, append = TRUE, sep = ',') #get a warning message that is okay
+
+#clean up
+rm(key)
+
+
+```
+
 # NEXUT0001
 
 For NEXUT001, two lanes of NovaSeqX+ were ordered. Data was delivered as single lanes. Set up a demultiplex script for each one and then concatenate samples.
@@ -113,81 +148,7 @@ sbatch BCL_Convert.sh /bulk/jpoland/raw_data/psomagen/AN00014624/mmfs1/lustre2/A
 sbatch BCL_Convert.sh /bulk/jpoland/raw_data/psomagen/AN00014624_2ndLane/mmfs1/lustre2/Analysis/Project/AN00014624/tar/20230626_225N32LT3_5 /bulk/jpoland/skimseq/NEXUT001/00_Demultiplex ../data/Intermediate_File/NEXUT0001_L008_i7i5.csv 
 
 
-#NEX0035
-key35 <- read.delim(file = './data/Intermediate_File/FFAR_35_Key.txt', header = FALSE) #load key
 
-colnames(key35) <- c('unique_id', 'barcode')
-
-#do a gsub for blank dna to get BLANKDNAX so we can split string
-key35$sample <- key35$unique_id
-key35$sample <- gsub('ank_', 'ank', key35$sample, ignore.case = TRUE) #gsub
-
-#add well number with a substitute will be in blank wells first underscore
-key35$sample <- ifelse(grepl('blank', key35$sample, ignore.case = TRUE), sub('_', '', key35$sample), key35$sample)
-
-key35$main_sample <- sapply( str_split(key35$sample, pattern = '_'), '[[', 1)
-
-#for each unique sample need to concatenate original files with new sample name for both R1 and R2 files
-samples <- as.data.frame(unique(key35$main_sample))
-colnames(samples) <- 'sample_name'
-
-r1 <- cbind.data.frame(samples,  'R1') #make an R1 file
-r2 <- cbind.data.frame(samples, 'R2') #make an R2 file
-
-# depending on how many rows are in R1 and R2, these can be sped up slightly by converting loops to map functions.
-for(i in 1:nrow(r1)){#lloop over file and get all unique sample_id_barcodes
-  #filenames start with these value so can cat start*R1* start*R1* > sample_name_R1.fq.gz
-  x <- key35[key35$main_sample == r1$sample_name[i],]
-  x$unique_id <- paste('./00_demultiplexed/', x$unique_id, '_R1.fq.gz', sep = '')
-  files_to_cat <- paste( x$unique_id, collapse = ' ')
-  r1$command[i] <- paste('cat ', files_to_cat, ' > ', paste('./01_samples/', toupper(r1$sample_name[i]), '_R1.fq.gz', sep = ''), sep = '' )
-  }
-
-#For R2 reads
-for(i in 1:nrow(r2)){#lloop over file and get all unique sample_id_barcodes
-  #filenames start with these value so can cat start*R2* start*R2* > sample_name_R2.fq.gz
-  x <- key35[key35$main_sample == r2$sample_name[i],]
-  x$unique_id <- paste('./00_demultiplexed/', x$unique_id, '_R2.fq.gz', sep = '')
-  files_to_cat <- paste(x$unique_id, collapse = ' ')
- 
-  r2$command[i] <- paste('cat ', files_to_cat, ' > ', paste('./01_samples/', toupper(r2$sample_name[i]), '_R2.fq.gz', sep = '' ), sep = '')
-}
-
-#write files out
-#write.table(r1[, 3], file = './data/Intermediate_File/FFAR35_Concat_R1.txt', row.names = FALSE, col.names = FALSE, quote = FALSE)
-#write.table(r2[, 3], file = './data/Intermediate_File/FFAR35_Concat_R2.txt', row.names = FALSE, col.names = FALSE, quote = FALSE)
-
-#clean up
-rm(key35, r1, r2, samples, x, files_to_cat, i)
-
-```
- 
-For each NEX library an R1 and R2 concat file was made as [FFAR35_Concat_R1.txt](./scripts/FFAR35_Concat_R1.txt), [FFAR35_Concat_R2.txt](./scripts/FFAR35_Concat_R2.txt), [FFAR34_Concat_R1.txt](./scripts/FFAR34_Concat_R1.txt), [FFAR34_Concat_R2.txt](./scripts/FFAR34_Concat_R2.txt), [FFAR33_Concat_R1.txt](./scripts/FFAR33_Concat_R1.txt), [FFAR33_Concat_R2.txt](./scripts/FFAR33_Concat_R2.txt), [FFAR32_Concat_R1.txt](./scripts/FFAR32_Concat_R1.txt), [FFAR32_Concat_R2.txt](./scripts/FFAR32_Concat_R2.txt), and [FFAR30_Concat_R1.txt](./scripts/FFAR30_Concat_R1.txt), [FFAR30_Concat_R2.txt](./scripts/FFAR30_Concat_R2.txt).
-
-For both the R1 and R2 files, a shell script was developed using a common header command line and then pasting column three into the shell script as [01_FFAR30_Concat_R1.sh](./scripts/01_FFAR30_Concat_R1.sh), [01_FFAR30_Concat_R2.sh](./scripts/01_FFAR30_Concat_R2.sh), 
-[01_FFAR32_Concat_R1.sh](./scripts/01_FFAR32_Concat_R1.sh), [01_FFAR32_Concat_R2.sh](./scripts/01_FFAR32_Concat_R2.sh),
-[01_FFAR33_Concat_R1.sh](./scripts/01_FFAR33_Concat_R1.sh), [01_FFAR33_Concat_R2.sh](./scripts/01_FFAR33_Concat_R2.sh),
-[01_FFAR34_Concat_R1.sh](./scripts/01_FFAR34_Concat_R1.sh), [01_FFAR34_Concat_R2.sh](./scripts/01_FFAR34_Concat_R2.sh), and
-[01_FFAR35_Concat_R1.sh](./scripts/01_FFAR35_Concat_R1.sh), [01_FFAR35_Concat_R2.sh](./scripts/01_FFAR35_Concat_R2.sh).
-
-Shell scripts were submitted to beocat using:
-% sbatch 01_FFAR30_Concat_R1.sh 
-% sbatch 01_FFAR30_Concat_R2.sh
-
-% sbatch 01_FFAR32_Concat_R1.sh 
-% sbatch 01_FFAR32_Concat_R2.sh
-
-% sbatch 01_FFAR33_Concat_R1.sh 
-% sbatch 01_FFAR33_Concat_R2.sh
-
-% sbatch 01_FFAR34_Concat_R1.sh 
-% sbatch 01_FFAR34_Concat_R2.sh
-
-% sbatch 01_FFAR35_Concat_R1.sh 
-% sbatch 01_FFAR35_Concat_R2.sh
-
-Move error and out messages to ./out_error/01_samples/:
-% mv *.out ./out_error/01_samples/
 
 # Session Information
 
