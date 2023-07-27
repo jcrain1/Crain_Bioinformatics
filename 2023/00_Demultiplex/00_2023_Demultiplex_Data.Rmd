@@ -40,7 +40,12 @@ The basic key file was [HJM5MCCX2_L001_i7i5.csv](./data/Intermediate_File/HJM5MC
 [HJMVLCCX2_L008_i7i5.csv](./data/Intermediate_File/HJMVLCCX2_L008_i7i5.csv),
 [HJM5MCCX2_L007_i7i5.csv](./data/Intermediate_File/HJM5MCCX2_L007_i7i5.csv),
 [HJM5MCCX2_L008_i7i5.csv](./data/Intermediate_File/HJM5MCCX2_L008_i7i5.csv),
-
+[HJMMJCCX2_L001_i7i5.csv](./data/Intermediate_File/HJMMJCCX2_L001_i7i5.csv),
+[HJMMJCCX2_L002_i7i5.csv](./data/Intermediate_File/HJMMJCCX2_L002_i7i5.csv),
+[HJMMJCCX2_L003_i7i5.csv](./data/Intermediate_File/HJMMJCCX2_L003_i7i5.csv),
+[HJMMJCCX2_L004_i7i5.csv](./data/Intermediate_File/HJMMJCCX2_L004_i7i5.csv),
+[HJMMJCCX2_L005_i7i5.csv](./data/Intermediate_File/HJMMJCCX2_L005_i7i5.csv),
+[HJMMJCCX2_L006_i7i5.csv](./data/Intermediate_File/HJMMJCCX2_L006_i7i5.csv),
 
 Files were ran using [BCL_Convert.sh](./scripts/BCL_Convert.sh) as
 
