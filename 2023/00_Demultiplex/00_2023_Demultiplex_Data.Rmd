@@ -1,5 +1,5 @@
 ---
-title: "BCL to FastQ"
+title: "BCL to FastQ 2023"
 author: "Jared Crain"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 output: html_document
@@ -9,11 +9,11 @@ editor_options:
 
 # Objective
 
-Using blc-convert, set up sample scripts for each data source. Will develop shell scripts for demultiplexing and sample evaluation.
+Using bcl-convert, set up sample scripts for each data source. Will develop shell scripts for demultiplexing and sample evaluation.
 
 ```{r setup, eval=TRUE}
-knitr::opts_knit$set(root.dir = '/Users/crain/Documents/Bioinformatics/Demultiplex/') #can set paths but should be set by using Rproj
-setwd('/Users/crain/Documents/Bioinformatics/Demultiplex') #set to path
+knitr::opts_knit$set(root.dir = '/Users/crain/Documents/Bioinformatics/2023/00_Demultiplex/') #can set paths but should be set by using Rproj
+setwd('/Users/crain/Documents/Bioinformatics/2023/00_Demultiplex/') #set to path
 options(digits = 10) #set options to include lots of digits
 
 #Git link part of 
@@ -23,39 +23,32 @@ options(digits = 10) #set options to include lots of digits
 ```
 
 # CIMMYT AWG 2023
-GBS files delivered as bcl. Need to demultiplex to original R1 fastq read.
+GBS files delivered as bcl. Need to convert bcl to original R1 fastq read with one fastq file per lane.
 
-```{cimmyt}
-key <- read.delim(file = './data/Original_Data/NEXUT0001.txt')
-
-#check the number of unique reads
-length(unique(key$sample_name))
-
-#For Each lane 2 
-key$Lane <- 2
-key <- key[, c('Lane', 'sample_name', 'i7_barcode', 'i5_barcode')] #get information for bcl2fastq processing
-
-colnames(key) <- c('Lane', 'Sample_ID', 'index', 'index2')
-
-#write out version 2 sample file. Update number of index reads and reads as necessary. 
-system('echo "[Header]\nFileFormatVersion,2\n\n[Reads]\nRead1Cycles,151\nRead2Cycles,151\nIndex1Cycles,10\nIndex2Cycles,10\n\n[BCLConvert_Settings]\nCreateFastqForIndexReads,0\nOverrideCycles,Y151;I8N2;N2I8;Y151\n[BCLConvert_Data]" > ./data/Intermediate_File/NEXUT0001_L002_i7i5.csv')
-
-write.table(key, file = './data/Intermediate_File/NEXUT0001_L002_i7i5.csv', row.names = FALSE, quote = FALSE, append = TRUE, sep = ',') #get a warning message that is okay
-
-
-#For Each lane 8
-key$Lane <- 8
-
-#write out version 2 sample file. Update number of index reads and reads as necessary. 
-system('echo "[Header]\nFileFormatVersion,2\n\n[Reads]\nRead1Cycles,151\nRead2Cycles,151\nIndex1Cycles,10\nIndex2Cycles,10\n\n[BCLConvert_Settings]\nCreateFastqForIndexReads,0\nOverrideCycles,Y151;I8N2;N2I8;Y151\n[BCLConvert_Data]" > ./data/Intermediate_File/NEXUT0001_L008_i7i5.csv')
-
-write.table(key, file = './data/Intermediate_File/NEXUT0001_L008_i7i5.csv', row.names = FALSE, quote = FALSE, append = TRUE, sep = ',') #get a warning message that is okay
-
-#clean up
-rm(key)
+The basic key file was [HJM5MCCX2_L001_i7i5.csv](./data/Intermediate_File/HJM5MCCX2_L001_i7i5.csv) set up for each GBS library GBS1960-1992 including:
+[HJM5MCCX2_L001_i7i5.csv](./data/Intermediate_File/HJM5MCCX2_L001_i7i5.csv),
+[HJM5MCCX2_L002_i7i5.csv](./data/Intermediate_File/HJM5MCCX2_L002_i7i5.csv),
+[HJM5MCCX2_L003_i7i5.csv](./data/Intermediate_File/HJM5MCCX2_L003_i7i5.csv),
+[HJM5MCCX2_L004_i7i5.csv](./data/Intermediate_File/HJM5MCCX2_L004_i7i5.csv),
+[HJM5MCCX2_L005_i7i5.csv](./data/Intermediate_File/HJM5MCCX2_L005_i7i5.csv),
+[HJM5MCCX2_L006_i7i5.csv](./data/Intermediate_File/HJM5MCCX2_L006_i7i5.csv),
+[HJM5MCCX2_L007_i7i5.csv](./data/Intermediate_File/HJM5MCCX2_L007_i7i5.csv),
+[HJM5MCCX2_L008_i7i5.csv](./data/Intermediate_File/HJM5MCCX2_L008_i7i5.csv),
+[HJMGHCCX2_L001_i7i5.csv](./data/Intermediate_File/HJMGHCCX2_L001_i7i5.csv),
+[HJMGHCCX2_L002_i7i5.csv](./data/Intermediate_File/HJMGHCCX2_L002_i7i5.csv),
+[HJMGHCCX2_L003_i7i5.csv](./data/Intermediate_File/HJMGHCCX2_L003_i7i5.csv),
+[HJMVLCCX2_L008_i7i5.csv](./data/Intermediate_File/HJMVLCCX2_L008_i7i5.csv),
+[HJM5MCCX2_L007_i7i5.csv](./data/Intermediate_File/HJM5MCCX2_L007_i7i5.csv),
+[HJM5MCCX2_L008_i7i5.csv](./data/Intermediate_File/HJM5MCCX2_L008_i7i5.csv),
 
 
-```
+Files were ran using [BCL_Convert.sh](./scripts/BCL_Convert.sh) as
+
+bash --exclude=warlock09 BCL_Convert.sh {INPUTDIR} {OUTPUTDIR} {SAMPLESHEET}
+
+After a fastq file was created, the database was updated, and the R1 file was placed in /bulk/jpoland/gbs.
+
+
 
 # NEXUT0001
 

@@ -3,7 +3,7 @@
 #SBATCH --nodes=1 
 #SBATCH --mem=64GB 
 #SBATCH --cpus-per-task=16
-#SBATCH --job-name=NEXUT
+#SBATCH --job-name=BCLCON
 #SBATCH --output=bcl_demux_%A_%a.out  
 #SBATCH --error=bcl_demux_%A_%a.err 
 #SBATCH --time=00-23:59:00   # Use the form DD-HH:MM:SS
