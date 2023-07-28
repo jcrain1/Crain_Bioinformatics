@@ -54,7 +54,6 @@ bash --exclude=warlock09 BCL_Convert.sh {INPUTDIR} {OUTPUTDIR} {SAMPLESHEET}
 After a fastq file was created, the database was updated, and the R1 file was placed in /bulk/jpoland/gbs.
 
 # NEX0067
-#TODO
 
 For NEX0067 (FFAR Phenomics Year 1), one lane of NovaSeq was ordered. Data was delivered as single lane. 
 
@@ -118,26 +117,17 @@ key <- key[, c('Lane', 'sample_name', 'i7_barcode', 'i5_barcode')] #get informat
 colnames(key) <- c('Lane', 'Sample_ID', 'index', 'index2')
 
 #write out version sample file. Update number of index reads and reads as necessary. 
-system('echo "[Header]\nFileFormatVersion,2\n\n[Reads]\nRead1Cycles,151\nRead2Cycles,151\nIndex1Cycles,10\nIndex2Cycles,10\n\n[BCLConvert_Settings]\nCreateFastqForIndexReads,0\nOverrideCycles,Y151;I8N2;N2I8;Y151\n[BCLConvert_Data]" > ./data/Intermediate_File/NEX0071_L007_i7i5.csv')
+system('echo "[Header]\nFileFormatVersion,2\n\n[Reads]\nRead1Cycles,151\nRead2Cycles,151\nIndex1Cycles,10\nIndex2Cycles,10\n\n[BCLConvert_Settings]\nCreateFastqForIndexReads,0\nOverrideCycles,Y151;I8N2;N2I8;Y151\n[BCLConvert_Data]" > ./data/Intermediate_File/NEX0067_L002_i7i5.csv')
 
-write.table(key, file = './data/Intermediate_File/NEX0071_L007_i7i5.csv', row.names = FALSE, quote = FALSE, append = TRUE, sep = ',') #get a warning message that is okay
+write.table(key, file = './data/Intermediate_File/NEX0067_L002_i7i5.csv', row.names = FALSE, quote = FALSE, append = TRUE, sep = ',') #get a warning message that is okay
 
 #clean up
 rm(key)
 
-
-
-
 ```
 
 Using [BCL_Convert.sh](./scripts/BCL_Convert.sh), a shell script was started as
-sbatch --exclude=warlock09 ~/Crain_Bioinformatics/2023/00_Demultiplex/scripts/BCL_Convert.sh  /fastscratch/jcrain/AN00014386/mmfs1/lustre2/Analysis/Project/AN00014386/tar/20230524_223JMNLT3_3/ /fastscratch/jcrain/NEXUT071_7 ~/Crain_Bioinformatics/2023/00_Demultiplex/data/Intermediate_File/NEX0071_L007_i7i5.csv
-
-
-
-
-
-
+sbatch --exclude=warlock09 ~/Crain_Bioinformatics/2023/00_Demultiplex/scripts/BCL_Convert.sh  /fastscratch/jcrain/AN00013351/mmfs1/lustre2/Analysis/Project/AN00013351/tar/230224_HL7TWDSX5_6/ /fastscratch/jcrain/NEXUT067 ~/Crain_Bioinformatics/2023/00_Demultiplex/data/Intermediate_File/NEX0067_L002_i7i5.csv
 
 
 # NEX0072
@@ -219,7 +209,7 @@ rm(key)
 ```
 
 Using [BCL_Convert.sh](./scripts/BCL_Convert.sh), a shell script was started as
-sbatch --exclude=warlock09 ~/Crain_Bioinformatics/2023/00_Demultiplex/scripts/BCL_Convert.sh  /fastscratch/jcrain/AN00014387/mmfs1/lustre2/Analysis/Project/AN00014387/tar/20230524_223JMNLT3_3/ /fastscratch/jcrain/NEXUT071_7 ~/Crain_Bioinformatics/2023/00_Demultiplex/data/Intermediate_File/NEX0072_L008_i7i5.csv
+sbatch --exclude=warlock09 ~/Crain_Bioinformatics/2023/00_Demultiplex/scripts/BCL_Convert.sh  /fastscratch/jcrain/AN00014387/mmfs1/lustre2/Analysis/Project/AN00014387/tar/20230524_223JMNLT3_3/ /fastscratch/jcrain/NEX0072_8 ~/Crain_Bioinformatics/2023/00_Demultiplex/data/Intermediate_File/NEX0072_L008_i7i5.csv
 
 
 sbatch --exclude=warlock09 ~/Crain_Bioinformatics/2023/00_Demultiplex/scripts/BCL_Convert.sh  /fastscratch/jcrain/AN00014387_2ndLane/mmfs1/lustre2/Analysis/Project/AN00014387/tar/20230626_225N32LT3_5/ /fastscratch/jcrain/NEX0072_3 ~/Crain_Bioinformatics/2023/00_Demultiplex/data/Intermediate_File/NEX0072_L003_i7i5.csv
@@ -316,7 +306,7 @@ rm(key)
 ```
 
 Using [BCL_Convert.sh](./scripts/BCL_Convert.sh), a shell script was started as
-sbatch --exclude=warlock09 ~/Crain_Bioinformatics/2023/00_Demultiplex/scripts/BCL_Convert.sh  /fastscratch/jcrain/AN00014386/mmfs1/lustre2/Analysis/Project/AN00014386/tar/20230524_223JMNLT3_3/ /fastscratch/jcrain/NEXUT071_7 ~/Crain_Bioinformatics/2023/00_Demultiplex/data/Intermediate_File/NEX0071_L007_i7i5.csv
+sbatch --exclude=warlock09 ~/Crain_Bioinformatics/2023/00_Demultiplex/scripts/BCL_Convert.sh  /fastscratch/jcrain/AN00014386/mmfs1/lustre2/Analysis/Project/AN00014386/tar/20230524_223JMNLT3_3/ /fastscratch/jcrain/NEX0071_7 ~/Crain_Bioinformatics/2023/00_Demultiplex/data/Intermediate_File/NEX0071_L007_i7i5.csv
 
 
 sbatch --exclude=warlock09 ~/Crain_Bioinformatics/2023/00_Demultiplex/scripts/BCL_Convert.sh  /fastscratch/jcrain/AN00014386_2ndLane/mmfs1/lustre2/Analysis/Project/AN00014386/tar/20230626_225N32LT3_5/ /fastscratch/jcrain/NEX0071_2 ~/Crain_Bioinformatics/2023/00_Demultiplex/data/Intermediate_File/NEX0071_L002_i7i5.csv
