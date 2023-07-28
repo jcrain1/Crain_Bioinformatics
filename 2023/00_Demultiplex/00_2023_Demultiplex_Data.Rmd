@@ -59,7 +59,7 @@ After a fastq file was created, the database was updated, and the R1 file was pl
 
 For NEXUT001, two lanes of NovaSeqX+ were ordered. Data was delivered as single lanes. Set up a demultiplex script for each one and then concatenate samples.
 
-#TODO as original data came from Email [NEXUT0001.txt](./data/Original_Data/NEXUT0001.txt)
+##TODO as original data came from Email [NEXUT0001.txt](./data/Original_Data/NEXUT0001.txt)
 
 ```{r process_NEXUT001, eval=FALSE}
 require(RMySQL) #load required packages may need to install.packages("RMySQL") dependencies are DBI package as well
@@ -145,6 +145,89 @@ sbatch BCL_Convert.sh /bulk/jpoland/raw_data/psomagen/AN00014624/mmfs1/lustre2/A
 
 sbatch BCL_Convert.sh /bulk/jpoland/raw_data/psomagen/AN00014624_2ndLane/mmfs1/lustre2/Analysis/Project/AN00014624/tar/20230626_225N32LT3_5 /bulk/jpoland/skimseq/NEXUT001/00_Demultiplex ../data/Intermediate_File/NEXUT0001_L008_i7i5.csv 
 
+
+
+
+
+# NEXUT0002
+
+For NEXUT002, two lanes of NovaSeqX+ were ordered. Data was delivered on same flowcell. Set up a demultiplex script that will combine lanes.
+
+##TODO as original data came from Email [Skim_Seq_NXUT0002.txt](./data/Original_Data/Skim_Seq_NXUT0002.txt)
+
+```{r process_NEXUT002, eval=FALSE}
+require(RMySQL) #load required packages may need to install.packages("RMySQL") dependencies are DBI package as well
+
+#from https://stackoverflow.com/questions/29809036/how-to-hide-asterisk-a-part-of-the-code-in-r get username and password non-human readable (caution this does not encrypt or hide password)
+#This also only works in RStudio-may not work on all systems
+username <- charToRaw(invisible(rstudioapi::askForPassword("Database username"))) #get username
+password <-charToRaw(invisible(rstudioapi::askForPassword("Database password"))) #get password
+iwg <- dbConnect(MySQL(),user = rawToChar(username), dbname = 'intermediate_wheatgrass', host = '127.0.0.1', password = rawToChar(password), port = 6306) #run this line to connect to the database
+
+#Make a MySQL connection to beocat and intermediate_wheatgrass database
+#iwg <- dbConnect(MySQL(),user = rawToChar(username), dbname = 'intermediate_wheatgrass', host = 'headnode.beocat.ksu.edu', password = rawToChar(password), port = 6306) #run this line to connect to the database  with VPN
+#iwg <- dbConnect(MySQL(),user = rawToChar(username), dbname = 'intermediate_wheatgrass', host = '127.0.0.1', password = rawToChar(password), port = 6306) #run this line to connect to the database wihthout VPN after using ssh -L 6306:apate.beocat.ksu.edu:3306 jcrain@headnode.beocat.ksu.edu
+
+
+#make key file
+#added reverse compliment from database
+nexut0002 <- "SELECT
+nextera_iwg.nextera_id,
+nextera_iwg.nextera_name,
+dna_iwg.sample_id,
+dna_iwg.sample_name,
+nextera_i7barcode_iwg.barcode as 'i7_barcode',
+nextera_i5barcode_iwg.barcode as 'i5_barcode',
+nextera_i5barcode_iwg.barcode_reverse_comp as 'i5_reverse'
+FROM dna_iwg LEFT JOIN nextera_iwg ON nextera_iwg.dna_id = dna_iwg.plate_id
+JOIN nextera_i7barcode_iwg ON dna_iwg.well_A01 = nextera_i7barcode_iwg.well_A01
+JOIN nextera_i5barcode_iwg ON nextera_iwg.i5 = nextera_i5barcode_iwg.ID
+WHERE nextera_iwg.nextera_id like '%0030%'
+ORDER BY nextera_iwg.nextera_id, dna_iwg.well_01A ASC"
+
+
+
+dbDisconnect(iwg)
+
+#write file
+# write.table(nexut0002, file = './data/Original_Data/NEXUT0002.txt', quote = FALSE, row.names = FALSE, sep = '\t') #write file out
+
+
+#clean up
+rm(nexut0002, password, username)
+
+```
+
+Make sample files
+
+```{r NEXUT0002_SampleFiles}
+key <- read.delim(file = './data/Original_Data/Skim_Seq_NXUT0002.txt')
+
+#check the number of unique reads
+length(unique(key$sample_name))
+
+#For Each lane 2 
+key$Lane <- 5
+key <- key[, c('Lane', 'sample_name', 'i7_barcode', 'i5_barcode')] #get information for bcl2fastq processing
+key2 <- key
+key2$Lane <- 6
+key <- rbind(key, key2)
+
+colnames(key) <- c('Lane', 'Sample_ID', 'index', 'index2')
+
+#write out version 2 sample file. Update number of index reads and reads as necessary. 
+#system('echo "[Header]\nFileFormatVersion,2\n\n[Reads]\nRead1Cycles,151\nRead2Cycles,151\nIndex1Cycles,10\nIndex2Cycles,10\n\n[BCLConvert_Settings]\nCreateFastqForIndexReads,0\nOverrideCycles,Y151;I8N2;N2I8;Y151\n[BCLConvert_Data]" > ./data/Intermediate_File/NEXUT0002_L005_6_i7i5.csv')
+
+#write.table(key, file = './data/Intermediate_File/NEXUT0002_L005_6_i7i5.csv', row.names = FALSE, quote = FALSE, append = TRUE, sep = ',') #get a warning message that is okay
+
+#clean up
+rm(key)
+
+
+```
+
+Using [BCL_Convert.sh](./scripts/BCL_Convert.sh), a shell script was started as
+sbatch BCL_Convert.sh  /fastscratch/jcrain/AN00015244/mmfs1/lustre2/Analysis/Project/AN00015244/tar/20230725_2273TTLT3_5/ /bulk/jpoland/skimseq/NEXUT001/00_Demultiplex ~/Crain_Bioinformatics/2023/00_Demultiplex/data/Intermediate_File/NEXUT0002_L005_6_i7i5.csv
 
 
 
