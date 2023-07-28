@@ -112,7 +112,8 @@ length(unique(key$sample_name))
 
 #For Each lane  
 key$Lane <- 2
-key <- key[, c('Lane', 'sample_name', 'i7_barcode', 'i5_barcode')] #get information for bcl2fastq processing
+key <- key[, c('Lane', 'sample_name', 'i7_barcode', 'i5_reverse')] #get information for bcl2fastq processing 
+#https://knowledge.illumina.com/software/general/software-general-reference_material-list/000001800 for wheter a reverse complement or barcode is needed. NEX0067 was on a NovaSeq S4 flowcell needs the reverse i5
 
 colnames(key) <- c('Lane', 'Sample_ID', 'index', 'index2')
 
@@ -127,7 +128,7 @@ rm(key)
 ```
 
 Using [BCL_Convert.sh](./scripts/BCL_Convert.sh), a shell script was started as
-sbatch --exclude=warlock09 ~/Crain_Bioinformatics/2023/00_Demultiplex/scripts/BCL_Convert.sh  /fastscratch/jcrain/AN00013351/mmfs1/lustre2/Analysis/Project/AN00013351/tar/230224_HL7TWDSX5_6/ /fastscratch/jcrain/NEXUT067 ~/Crain_Bioinformatics/2023/00_Demultiplex/data/Intermediate_File/NEX0067_L002_i7i5.csv
+sbatch --exclude=warlock09 ~/Crain_Bioinformatics/2023/00_Demultiplex/scripts/BCL_Convert.sh  /fastscratch/jcrain/AN00013351/mmfs1/lustre2/Analysis/Project/AN00013351/tar/230224_HL7TWDSX5_6/ /fastscratch/jcrain/NEX0067 ~/Crain_Bioinformatics/2023/00_Demultiplex/data/Intermediate_File/NEX0067_L002_i7i5.csv
 
 
 # NEX0072
